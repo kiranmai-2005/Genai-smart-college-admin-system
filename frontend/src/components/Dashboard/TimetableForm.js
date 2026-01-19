@@ -9,7 +9,6 @@ const TimetableForm = ({ onGenerate }) => {
   const [selectedConfigId, setSelectedConfigId] = useState('');
   const [isLoadingConfigs, setIsLoadingConfigs] = useState(true);
   const [errorConfigs, setErrorConfigs] = useState('');
-  const [selectedRoom, setSelectedRoom] = useState('');
 
   // Fetch timetable configurations on component mount
   useEffect(() => {

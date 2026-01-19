@@ -1,5 +1,5 @@
 // Custom hook for managing admin data across components
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export const useAdminData = () => {
   // Initialize with sample data
