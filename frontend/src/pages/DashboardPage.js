@@ -102,7 +102,7 @@ const DashboardPage = () => {
             <button
               className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'document' ? 'text-indigo-600 border-indigo-600' : 'hover:text-gray-600 hover:border-gray-300'}`}
               onClick={() => setActiveTab('document')}
-              type="button"
+              role="tab"
               aria-selected={activeTab === 'document'}
             >
               Document Generation
@@ -112,7 +112,7 @@ const DashboardPage = () => {
             <button
               className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'timetable' ? 'text-indigo-600 border-indigo-600' : 'hover:text-gray-600 hover:border-gray-300'}`}
               onClick={() => setActiveTab('timetable')}
-              type="button"
+              role="tab"
               aria-selected={activeTab === 'timetable'}
             >
               Timetable Draft Generation
@@ -122,7 +122,7 @@ const DashboardPage = () => {
             <button
               className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'admin' ? 'text-indigo-600 border-indigo-600' : 'hover:text-gray-600 hover:border-gray-300'}`}
               onClick={() => setActiveTab('admin')}
-              type="button"
+              role="tab"
               aria-selected={activeTab === 'admin'}
             >
               Admin Panel
@@ -132,7 +132,7 @@ const DashboardPage = () => {
             <button
               className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'pdf_upload' ? 'text-indigo-600 border-indigo-600' : 'hover:text-gray-600 hover:border-gray-300'}`}
               onClick={() => setActiveTab('pdf_upload')}
-              type="button"
+              role="tab"
               aria-selected={activeTab === 'pdf_upload'}
             >
               Upload PDF for RAG
