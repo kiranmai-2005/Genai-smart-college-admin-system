@@ -112,7 +112,7 @@ cd gen-ai-smart-college-admin-assistant
     ```bash
     flask run
     ```
-    The backend will run on `http://api.college-admin.edu` (accessible on network).
+    The backend will run on `http://localhost:5000` (accessible on network).
 
 ### 4. Frontend Setup (React)
 
@@ -127,17 +127,17 @@ cd gen-ai-smart-college-admin-assistant
 3.  **Configure Environment Variables:**
     Create a `.env` file in the `frontend/` directory and add:
     ```env
-    REACT_APP_BACKEND_URL=http://api.college-admin.edu/api
+    REACT_APP_BACKEND_URL=http://localhost:5000/api
     ```
 4.  **Start the React development server:**
     ```bash
     npm start
     ```
-    The frontend will open in your browser at `http://college-admin.edu`.
+    The frontend will open in your browser at `http://localhost:3000`.
 
 ### 5. Access the Application
 
-Open your web browser and navigate to `http://college-admin.edu` to access the Admin Dashboard.
+Open your web browser and navigate to `http://localhost:3000` to access the Admin Dashboard.
 
 ## Local Deployment Instructions
 
