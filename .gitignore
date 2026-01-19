@@ -1,0 +1,28 @@
+# Environments
+.env
+.flaskenv
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+
+# Node
+node_modules/
+build/
+
+# Uploads
+uploads/
+
+# Database migrations
+migrations/
+
+# IDE specific
+.idea/
+.vscode/
+.history/
+
+# OS generated files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,13 @@
+Flask==2.3.3
+Flask-SQLAlchemy==3.1.1
+Flask-Migrate==4.0.5
+Flask-JWT-Extended==4.4.4
+Flask-Cors==4.0.0
+psycopg2-binary==2.9.9
+python-dotenv==1.0.0
+bcrypt==4.1.2
+pymupdf==1.23.10 # For PDF extraction (fitz)
+sentence-transformers==2.2.2 # For RAG embeddings
+openai==1.6.1 # For OpenAI LLM integration
+google-generativeai==0.3.0 # For Google Gemini LLM integration
+reportlab==4.0.8 # For PDF generation

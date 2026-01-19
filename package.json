@@ -1,0 +1,10 @@
+{
+  "name": "gen-ai-smart-college-admin-assistant",
+  "version": "1.0.0",
+  "description": "Root package for Gen-AI Smart College Admin Assistant project",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}
