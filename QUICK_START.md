@@ -21,17 +21,17 @@ This makes your system accessible at professional URLs instead of localhost.
 cd backend
 python wsgi.py
 ```
-✅ **Backend will run on:** http://api.college-admin.edu
+✅ **Backend will run on:** http://localhost:5000
 
 ### **Step 2: Start Frontend (React UI)**
 ```bash
 cd frontend
 npm start
 ```
-✅ **Frontend will run on:** http://college-admin.edu
+✅ **Frontend will run on:** http://localhost:3000
 
 ### **Step 3: Access Your Application**
-Open your browser and go to: **http://college-admin.edu**
+Open your browser and go to: **http://localhost:3000**
 
 ---
 

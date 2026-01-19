@@ -1,8 +1,8 @@
 # 🎓 College Admin Pro - Smart Timetable System
 
-## 🌐 **Professional Access URLs**
-- **Frontend UI:** http://college-admin.edu (Beautiful React Interface)
-- **Backend API:** http://api.college-admin.edu (Flask REST API)
+## 🌐 **Access URLs**
+- **Frontend UI:** http://localhost:3000 (Beautiful React Interface)
+- **Backend API:** http://localhost:5000 (Flask REST API)
 - **Demo Page:** timetable_demo.html (Static Showcase)
 
 ## 🚀 **Quick Start**
