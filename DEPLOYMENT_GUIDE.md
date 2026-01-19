@@ -1,6 +1,23 @@
-# 🚀 College Timetable System - Deployment Guide
+# 🚀 College Admin Pro - Deployment Guide
 
-## 🌐 **Option 1: Share on Local Network (Easiest)**
+## 🎯 **Option 1: Production Build (Easiest for Users)**
+
+**Perfect for sharing with users who don't want to run technical commands!**
+
+### Quick Setup:
+1. **Build:** `deploy_production.bat`
+2. **Serve:** `python serve_production.py`
+3. **Share:** `http://YOUR_IP:8080`
+
+### What Users Get:
+- ✅ **No installation required** - Just a web browser
+- ✅ **Optimized performance** - Production build (~81KB)
+- ✅ **All features work** - Admin panel, timetable generation, etc.
+- ✅ **Network accessible** - Share with anyone on your WiFi
+
+---
+
+## 🌐 **Option 2: Share on Local Network (Development Mode)**
 
 ### Quick Setup:
 1. Run `share_timetable.bat`
@@ -12,7 +29,7 @@
 
 ---
 
-## ☁️ **Option 2: Deploy to Cloud (Professional)**
+## ☁️ **Option 3: Deploy to Cloud (Professional)**
 
 ### Recommended Platforms:
 
@@ -45,7 +62,7 @@ netlify deploy --prod --dir=build
 
 ---
 
-## 📱 **Option 3: Demo Video/Screenshots**
+## 📱 **Option 4: Demo Video/Screenshots**
 
 ### Create a Quick Demo:
 1. Record screen while using the app
