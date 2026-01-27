@@ -57,18 +57,23 @@ timetable_config_json = '''
 '''
 timetable_config_data = json.loads(timetable_config_json)
 
-new_config = TimetableConfiguration(
-    config_name=timetable_config_data['config_name'],
-    academic_year=timetable_config_data['academic_year'],
-    semester=timetable_config_data['semester'],
-    branches=timetable_config_data['branches'],
-    sections_per_branch=timetable_config_data['sections_per_branch'],
-    slots_per_day=timetable_config_data['slots_per_day'],
-    created_by=admin_user.id
-)
-db.session.add(new_config)
-db.session.commit()
-print(f"Timetable Configuration '{new_config.config_name}' added to the database.")
+# Check if config already exists before adding
+existing_config = TimetableConfiguration.query.filter_by(config_name=timetable_config_data['config_name']).first()
+if not existing_config:
+    new_config = TimetableConfiguration(
+        config_name=timetable_config_data['config_name'],
+        academic_year=timetable_config_data['academic_year'],
+        semester=timetable_config_data['semester'],
+        branches=timetable_config_data['branches'],
+        sections_per_branch=timetable_config_data['sections_per_branch'],
+        slots_per_day=timetable_config_data['slots_per_day'],
+        created_by=admin_user.id
+    )
+    db.session.add(new_config)
+    db.session.commit()
+    print(f"Timetable Configuration '{new_config.config_name}' added to the database.")
+else:
+    print("Timetable Configuration already exists. Skipping creation.")
 
 # --- Faculties ---
 faculties_data = [
