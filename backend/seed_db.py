@@ -81,11 +81,16 @@ faculties_data = [
     {'name': 'Prof. Ben Carter', 'employee_id': 'F002', 'department': 'ECE', 'max_weekly_workload': 18, 'max_daily_periods': 3, 'availability': {'Monday': ['13:00-14:00', '14:00-15:00'], 'Tuesday': ['09:00-10:00'], 'Wednesday': ['10:00-11:00', '11:00-12:00'], 'Thursday': [], 'Friday': ['13:00-14:00', '14:00-15:00']}},
     {'name': 'Dr. Cathy Lee', 'employee_id': 'F003', 'department': 'CSE', 'max_weekly_workload': 22, 'max_daily_periods': 5, 'availability': {'Monday': ['09:00-10:00', '10:00-11:00', '11:00-12:00'], 'Tuesday': ['09:00-10:00', '10:00-11:00', '11:00-12:00', '13:00-14:00'], 'Wednesday': ['09:00-10:00'], 'Thursday': ['13:00-14:00', '14:00-15:00'], 'Friday': ['09:00-10:00', '10:00-11:00']}}
 ]
+added_faculties = 0
 for f_data in faculties_data:
-    faculty = Faculty(**f_data)
-    db.session.add(faculty)
-db.session.commit()
-print(f"Added {len(faculties_data)} faculties to the database.")
+    existing_faculty = Faculty.query.filter_by(employee_id=f_data['employee_id']).first()
+    if not existing_faculty:
+        faculty = Faculty(**f_data)
+        db.session.add(faculty)
+        added_faculties += 1
+if added_faculties > 0:
+    db.session.commit()
+print(f"Added {added_faculties} faculties to the database.")
 
 # --- Subjects ---
 subjects_data = [
@@ -96,11 +101,16 @@ subjects_data = [
     {'name': 'Data Structures Lab', 'code': 'CSL301', 'department': 'CSE', 'is_lab': True, 'credits': 2, 'required_frequency_per_week': 1, 'lecture_periods': None, 'lab_periods': 2},
     {'name': 'Digital Logic Design Lab', 'code': 'ECL301', 'department': 'ECE', 'is_lab': True, 'credits': 2, 'required_frequency_per_week': 1, 'lecture_periods': None, 'lab_periods': 2}
 ]
+added_subjects = 0
 for s_data in subjects_data:
-    subject = Subject(**s_data)
-    db.session.add(subject)
-db.session.commit()
-print(f"Added {len(subjects_data)} subjects to the database.")
+    existing_subject = Subject.query.filter_by(code=s_data['code']).first()
+    if not existing_subject:
+        subject = Subject(**s_data)
+        db.session.add(subject)
+        added_subjects += 1
+if added_subjects > 0:
+    db.session.commit()
+print(f"Added {added_subjects} subjects to the database.")
 
 # --- Rooms ---
 rooms_data = [
@@ -109,8 +119,13 @@ rooms_data = [
     {'name': 'CSE_Lab1', 'room_type': 'Lab', 'capacity': 30, 'is_lab': True},
     {'name': 'ECE_Lab1', 'room_type': 'Lab', 'capacity': 30, 'is_lab': True}
 ]
+added_rooms = 0
 for r_data in rooms_data:
-    room = Room(**r_data)
-    db.session.add(room)
-db.session.commit()
-print(f"Added {len(rooms_data)} rooms to the database.")
+    existing_room = Room.query.filter_by(name=r_data['name']).first()
+    if not existing_room:
+        room = Room(**r_data)
+        db.session.add(room)
+        added_rooms += 1
+if added_rooms > 0:
+    db.session.commit()
+print(f"Added {added_rooms} rooms to the database.")
