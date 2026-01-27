@@ -10,6 +10,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 import os
 import io
+from datetime import datetime
 
 documents_bp = Blueprint('documents', __name__)
 

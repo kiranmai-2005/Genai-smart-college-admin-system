@@ -28,4 +28,6 @@ class Config:
     # RAG Configuration
     RAG_TOP_K = 5 # Number of top similar documents/chunks to retrieve
     CHUNK_SIZE = 500 # Characters per text chunk
-    CHUNK_OVERLAP = 50 # Characters for overlap between chunks
+    CHUNK_OVERLAP = 50 # Characters for overlap between chunks    npm install -g vercel
+    cd frontend
+    vercel --prod
