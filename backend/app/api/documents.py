@@ -32,15 +32,18 @@ def generate_document():
     # RAG: Retrieve relevant context based on inputs
     # Use a simple combination of inputs as the query for now
     rag_query = f"{inputs.get('title', '')} {inputs.get('event_name', '')} {inputs.get('department', '')} {inputs.get('details', '')}"
-    if not rag_query.strip():
-        # Fallback if no specific details, might use generic prompts
-        rag_context_chunks = []
-        rag_context_ids = []
-    else:
-        from app.services.embedding_service import get_embeddings_for_query
-        relevant_embeddings = get_embeddings_for_query(rag_query, top_k=current_app.config['RAG_TOP_K'])
-        rag_context_chunks = [item['text_chunk'] for item in relevant_embeddings]
-        rag_context_ids = [item['id'] for item in relevant_embeddings]
+    rag_context_chunks = []
+    rag_context_ids = []
+    
+    if rag_query.strip():
+        try:
+            from app.services.embedding_service import get_embeddings_for_query
+            relevant_embeddings = get_embeddings_for_query(rag_query, top_k=current_app.config['RAG_TOP_K'])
+            rag_context_chunks = [item['text_chunk'] for item in relevant_embeddings]
+            rag_context_ids = [item['id'] for item in relevant_embeddings]
+        except Exception as rag_error:
+            current_app.logger.warning(f"RAG retrieval failed, continuing without RAG context: {rag_error}")
+            # Continue without RAG context - fallback template will be used
 
     try:
         generated_text = generate_document_llm(document_type, inputs, rag_context_chunks)
