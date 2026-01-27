@@ -11,15 +11,27 @@ _embedding_model = None
 def get_embedding_model():
     global _embedding_model
     if _embedding_model is None:
-        model_name = current_app.config.get('EMBEDDING_MODEL_NAME', 'all-MiniLM-L6-v2')
-        current_app.logger.info(f"Loading embedding model: {model_name}")
-        _embedding_model = SentenceTransformer(model_name)
-    return _embedding_model
+        try:
+            model_name = current_app.config.get('EMBEDDING_MODEL_NAME', 'all-MiniLM-L6-v2')
+            current_app.logger.info(f"Loading embedding model: {model_name}")
+            _embedding_model = SentenceTransformer(model_name)
+        except Exception as e:
+            current_app.logger.error(f"Failed to load embedding model: {e}")
+            # Return None to indicate embedding model is unavailable
+            _embedding_model = False  # Use False to indicate failed attempt
+    return _embedding_model if _embedding_model is not False else None
 
 def generate_embedding(text: str):
     """Generates a vector embedding for a given text."""
-    model = get_embedding_model()
-    return model.encode(text).tolist()
+    try:
+        model = get_embedding_model()
+        if model is None:
+            current_app.logger.warning("Embedding model not available, returning empty embedding")
+            return [0.0] * 384  # Return dummy embedding (384 is default for all-MiniLM-L6-v2)
+        return model.encode(text).tolist()
+    except Exception as e:
+        current_app.logger.error(f"Failed to generate embedding: {e}")
+        return [0.0] * 384  # Return dummy embedding on error
 
 def create_embeddings_for_document(doc_id: int, text_chunks: list[str]):
     """
@@ -48,6 +60,12 @@ def get_embeddings_for_query(query_text: str, top_k: int = 5):
     Falls back gracefully if database doesn't support pgvector (e.g., SQLite).
     """
     try:
+        # First, check if there are any embeddings in the database
+        embedding_count = db.session.query(Embedding).count()
+        if embedding_count == 0:
+            current_app.logger.info("No embeddings found in database, returning empty list")
+            return []
+        
         query_embedding = generate_embedding(query_text)
 
         # Try PostgreSQL pgvector approach first
