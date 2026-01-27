@@ -5,12 +5,15 @@ from app.models import GeneratedDocument
 import os
 
 def _get_llm_client():
-    """Initializes and returns the appropriate LLM client based on config."""
+    """Initializes and returns the appropriate LLM client based on config.
+    If no API key is configured, returns None so callers can fallback gracefully.
+    """
     llm_model_name = current_app.config.get('LLM_MODEL_NAME', 'gpt-3.5-turbo').lower()
     api_key = current_app.config.get('LLM_API_KEY')
 
     if not api_key:
-        raise ValueError("LLM_API_KEY is not set in environment variables.")
+        current_app.logger.warning("LLM_API_KEY not set; falling back to template-based document generation.")
+        return None
 
     if 'gpt' in llm_model_name:
         return OpenAI(api_key=api_key)
@@ -23,6 +26,7 @@ def _get_llm_client():
 def generate_document_llm(document_type: str, admin_inputs: dict, rag_context: list[str]) -> str:
     """
     Generates an academic document using an LLM, incorporating RAG context.
+    If LLM is unavailable, falls back to a simple template.
     """
     llm_client = _get_llm_client()
     llm_model_name = current_app.config.get('LLM_MODEL_NAME', 'gpt-3.5-turbo')
@@ -50,6 +54,29 @@ def generate_document_llm(document_type: str, admin_inputs: dict, rag_context: l
     
     # Construct the final prompt
     final_prompt = f"{base_prompt}\n\n{context_str}{input_details}\n\nGenerate the complete document now:"
+
+    # If no LLM client is available, fallback to a deterministic template
+    if llm_client is None:
+        current_app.logger.info("Using fallback template for document generation (LLM not configured).")
+        fallback_lines = [
+            f"*** {document_type.upper()} ***",
+            "",
+            "This is an auto-generated document using the built-in template.",
+            "Please review and edit as needed.",
+            "",
+            "Details provided:",
+        ]
+        for key, value in (admin_inputs or {}).items():
+            if value:
+                fallback_lines.append(f"- {key.replace('_', ' ').title()}: {value}")
+        if rag_context:
+            fallback_lines.append("")
+            fallback_lines.append("Context snippets:")
+            for i, chunk in enumerate(rag_context[:3]):
+                fallback_lines.append(f"  {i+1}. {chunk[:200]}{'...' if len(chunk)>200 else ''}")
+        fallback_lines.append("")
+        fallback_lines.append("Thank you.")
+        return "\n".join(fallback_lines)
 
     current_app.logger.debug(f"Sending prompt to LLM (model: {llm_model_name}): {final_prompt[:500]}...")
 
@@ -81,4 +108,18 @@ def generate_document_llm(document_type: str, admin_inputs: dict, rag_context: l
         return generated_content
     except Exception as e:
         current_app.logger.error(f"Error during LLM content generation: {e}")
-        raise
+        # Fallback to template if LLM call fails
+        fallback_lines = [
+            f"*** {document_type.upper()} ***",
+            "",
+            "This document was generated using the fallback template due to an LLM error.",
+            f"Error: {e}",
+            "",
+            "Details provided:",
+        ]
+        for key, value in (admin_inputs or {}).items():
+            if value:
+                fallback_lines.append(f"- {key.replace('_', ' ').title()}: {value}")
+        fallback_lines.append("")
+        fallback_lines.append("Please review and edit as needed.")
+        return "\n".join(fallback_lines)
