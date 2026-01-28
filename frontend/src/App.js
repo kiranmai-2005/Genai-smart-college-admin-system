@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './components/Auth/AuthProvider';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import HistoryPage from './pages/HistoryPage';
 import Header from './components/Layout/Header';
 import Sidebar from './components/Layout/Sidebar';
+import { initializeDemoData } from './setupDemo';
 import './index.css';
 
 // PrivateRoute component to protect routes
@@ -27,11 +29,21 @@ const PrivateRoute = ({ children }) => {
 };
 
 function App() {
+  useEffect(() => {
+    // Initialize demo data if localStorage is empty
+    const hasSubjects = localStorage.getItem('admin_data_subjects');
+    if (!hasSubjects) {
+      console.log('Initializing demo data...');
+      initializeDemoData();
+    }
+  }, []);
+
   return (
     <AuthProvider>
       <Router>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
           <Route path="/history" element={<PrivateRoute><HistoryPage /></PrivateRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} /> {/* Redirect unknown routes */}

@@ -3,6 +3,7 @@ import SubjectManagement from '../components/Admin/SubjectManagement';
 import FacultyManagement from '../components/Admin/FacultyManagement';
 import SectionManagement from '../components/Admin/SectionManagement';
 import RoomManagement from '../components/Admin/RoomManagement';
+import QuickActions from '../components/QuickActions/QuickActions';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('subjects');
@@ -21,6 +22,11 @@ const AdminDashboard = () => {
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">Admin Dashboard</h1>
         <p className="text-gray-600">Manage subjects, faculty, sections, and rooms for timetable generation</p>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="mb-8">
+        <QuickActions />
       </div>
 
       {/* Tab Navigation */}

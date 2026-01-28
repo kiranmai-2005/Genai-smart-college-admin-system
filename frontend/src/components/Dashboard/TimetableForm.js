@@ -29,6 +29,16 @@ const TimetableForm = ({ onGenerate }) => {
     fetchConfigs();
   }, []);
 
+  // Log whenever admin data changes to debug
+  useEffect(() => {
+    console.log('TimetableForm - Admin data updated:', {
+      subjects: subjects.length,
+      faculty: faculty.length,
+      sections: sections.length,
+      subjectDetails: subjects
+    });
+  }, [subjects, faculty, sections]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedConfigId) {
@@ -151,6 +161,14 @@ const TimetableForm = ({ onGenerate }) => {
             className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none text-sm"
           >
             Load Demo Data
+          </button>
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none text-xs"
+            title="Refresh page to reload all data"
+          >
+            ↻ Refresh
           </button>
         </div>
       </form>

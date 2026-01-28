@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAdminData } from '../../hooks/useAdminData';
 
 const SubjectManagement = () => {
@@ -16,6 +16,11 @@ const SubjectManagement = () => {
     lab_periods: 2
   });
 
+  // Debug: Log subjects whenever they change
+  useEffect(() => {
+    console.log('Subjects in SubjectManagement:', subjects);
+  }, [subjects]);
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -27,18 +32,30 @@ const SubjectManagement = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Validate required fields
+    if (!formData.name || !formData.code || !formData.department) {
+      alert('Please fill in all required fields (Name, Code, Department)');
+      return;
+    }
+
     if (editingSubject) {
       // Update existing subject
       setSubjects(prev => prev.map(sub =>
         sub.id === editingSubject.id ? { ...formData, id: editingSubject.id } : sub
       ));
+      console.log('Subject updated:', formData);
     } else {
       // Add new subject
       const newSubject = {
         ...formData,
         id: Date.now() // Simple ID generation for demo
       };
-      setSubjects(prev => [...prev, newSubject]);
+      console.log('Adding new subject:', newSubject);
+      setSubjects(prev => {
+        const updated = [...prev, newSubject];
+        console.log('Updated subjects list:', updated);
+        return updated;
+      });
     }
 
     // Reset form

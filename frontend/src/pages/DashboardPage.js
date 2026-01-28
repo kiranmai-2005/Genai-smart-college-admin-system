@@ -57,9 +57,16 @@ const DashboardPage = () => {
         return;
       }
 
+      console.log('Generating timetable with config:', configId, 'inputs:', inputs);
       const response = await timetable.generateDraft(configId, inputs);
+      console.log('Timetable generation response:', response.data);
+      
+      // Extract the full response including draft_content and xai_logs
       setGeneratedTimetable(response.data);
       setGeneratedDocument(null); // Clear document if generating timetable
+      
+      // Show success message
+      alert('Timetable generated successfully!');
     } catch (error) {
       console.error('Error generating timetable:', error);
       alert('Failed to generate timetable. Check console for details.');
@@ -159,26 +166,71 @@ const DashboardPage = () => {
               <TimetableForm onGenerate={handleTimetableGenerate} />
             </div>
 
-            <div>
-              <RealtimeTimetableGenerator
-                timetableData={generatedTimetable?.draft_content}
-                shouldStartRealtime={shouldStartRealtime}
-                onGenerationComplete={(finalTimetable) => {
-                  setGeneratedTimetable({
-                    draft_content: finalTimetable,
-                    xai_logs: [
-                      {
-                        log_type: 'choice',
-                        rule_name: 'Generation_Complete',
-                        explanation: 'Real-time timetable generation completed successfully',
-                        priority: 1
-                      }
-                    ]
-                  });
-                  setShouldStartRealtime(false);
-                }}
-              />
-            </div>
+            {shouldStartRealtime && (
+              <div>
+                <RealtimeTimetableGenerator
+                  timetableData={generatedTimetable?.draft_content}
+                  shouldStartRealtime={shouldStartRealtime}
+                  onGenerationComplete={(finalTimetable) => {
+                    setGeneratedTimetable({
+                      draft_content: finalTimetable,
+                      xai_logs: [
+                        {
+                          log_type: 'choice',
+                          rule_name: 'Generation_Complete',
+                          explanation: 'Real-time timetable generation completed successfully',
+                          priority: 1
+                        }
+                      ]
+                    });
+                    setShouldStartRealtime(false);
+                  }}
+                />
+              </div>
+            )}
+
+            {generatedTimetable && !shouldStartRealtime && generatedTimetable.draft_content && (
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="text-lg font-semibold mb-4 text-gray-700">Generated Timetable</h3>
+                {generatedTimetable.draft_content.section_timetables && Object.keys(generatedTimetable.draft_content.section_timetables).length > 0 ? (
+                  <div className="space-y-8">
+                    {Object.entries(generatedTimetable.draft_content.section_timetables).map(([section, sectionData]) => (
+                      <div key={section} className="border rounded-lg p-4">
+                        <h4 className="text-md font-semibold mb-3 text-gray-600">Section: {section}</h4>
+                        <div className="overflow-x-auto">
+                          <table className="w-full border-collapse text-sm">
+                            <thead>
+                              <tr>
+                                <th className="border border-gray-300 bg-gray-200 p-2">Time</th>
+                                <th className="border border-gray-300 bg-gray-200 p-2">Monday</th>
+                                <th className="border border-gray-300 bg-gray-200 p-2">Tuesday</th>
+                                <th className="border border-gray-300 bg-gray-200 p-2">Wednesday</th>
+                                <th className="border border-gray-300 bg-gray-200 p-2">Thursday</th>
+                                <th className="border border-gray-300 bg-gray-200 p-2">Friday</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {['09:00 - 10:00', '10:00 - 11:00', '11:00 - 12:00', 'Lunch Break', '13:00 - 14:00', '14:00 - 15:00', '15:00 - 16:00'].map(slot => (
+                                <tr key={slot}>
+                                  <td className="border border-gray-300 bg-gray-100 p-2 font-medium">{slot}</td>
+                                  {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map(day => (
+                                    <td key={`${day}-${slot}`} className="border border-gray-300 p-2 text-center bg-blue-50">
+                                      {sectionData[day] && sectionData[day][slot] ? sectionData[day][slot] : 'Free'}
+                                    </td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500">No timetable data available</p>
+                )}
+              </div>
+            )}
 
             {generatedTimetable && generatedTimetable.xai_logs && generatedTimetable.xai_logs.length > 0 && (
               <div className="bg-gray-50 p-4 rounded-md">

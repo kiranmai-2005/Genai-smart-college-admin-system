@@ -1,8 +1,17 @@
 from flask import current_app
-from openai import OpenAI # Example for OpenAI, could be GoogleGenerativeAI for Gemini
-import google.generativeai as genai # Example for Google Gemini
 from app.models import GeneratedDocument
 import os
+
+# Make these optional imports so app can start without them
+try:
+    from openai import OpenAI
+except ImportError:
+    OpenAI = None
+
+try:
+    import google.generativeai as genai
+except ImportError:
+    genai = None
 
 def _get_llm_client():
     """Initializes and returns the appropriate LLM client based on config.
@@ -16,8 +25,14 @@ def _get_llm_client():
         return None
 
     if 'gpt' in llm_model_name:
+        if OpenAI is None:
+            current_app.logger.warning("OpenAI library not installed")
+            return None
         return OpenAI(api_key=api_key)
     elif 'gemini' in llm_model_name:
+        if genai is None:
+            current_app.logger.warning("Google Generative AI library not installed")
+            return None
         genai.configure(api_key=api_key)
         return genai
     else:
